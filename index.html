@@ -935,7 +935,7 @@
             }
 
             // Preincarca clientii din Firebase in cache
-            await refreshClients();
+            refreshClients();
         }
 
         // === LOGIN ===
@@ -1814,7 +1814,7 @@
             });
         }
 
-                async function syncGDPRFromWebhook(callback) {
+        async function syncGDPRFromWebhook(callback) {
             var settings = await getSettingsAsync();
             var webhookUrl = (settings.webhookUrl || '').trim();
             if (!webhookUrl) { if(callback) callback(0); return; }
@@ -1861,7 +1861,7 @@
             document.head.appendChild(script);
         }
 
-                function loadGDPRList() {
+        function loadGDPRList() {
             var clients = getClients();
             var signed = clients.filter(function(c) { return c.gdprSigned; });
             signed.sort(function(a, b) {
@@ -1903,7 +1903,7 @@
             });
         }
 
-                async function marcheazaGDPRSemnat(clientId) {
+        async function marcheazaGDPRSemnat(clientId) {
             var clients = getClients();
             var clientName = '';
             for (var i = 0; i < clients.length; i++) {
@@ -1931,7 +1931,7 @@
             setTimeout(function(){ banner.style.opacity='0'; banner.style.transition='opacity 0.5s'; setTimeout(function(){banner.remove();},500); }, 3500);
         }
 
-                function checkGDPRConfirm() {
+        function checkGDPRConfirm() {
             var params = new URLSearchParams(window.location.search);
             var confirmToken = params.get('gdprConfirm');
             if (!confirmToken) return false;
@@ -2235,7 +2235,8 @@
         }
 
         // Init
-        (async function() { await init(); })();
+        init();
+        }
     </script>
 </body>
 
