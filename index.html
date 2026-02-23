@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1D4ED8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Interada CRM">
+    <link rel="manifest" href="manifest.json">
+    <title>CRM - Sistem Agent & Birou</title>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-tabs {
+            background: var(--white);
+            display: flex;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .content {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--light);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-new {
+            background: #DBEAFE;
+            color: var(--primary);
+        }
+
+        .status-working {
+            background: #FEF3C7;
+            color: var(--warning);
+        }
+
+        .status-done {
+            background: #D1FAE5;
+            color: var(--success);
+        }
+
+        /* Status Dropdown */
+        .status-dropdown {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #E5E7EB;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .status-dropdown:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .status-dropdown option {
+            padding: 4px;
+        }
+
+        /* Form Add Client */
+        .add-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--primary);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .file-upload:hover {
+            background: #EBF5FF;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .file-item .remove {
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .file-icon {
+            color: var(--primary);
+        }
+
+        .files-column {
+            max-width: 150px;
+        }
+
+        .files-column a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .files-column a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-add-file {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            line-height: 22px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .btn-add-file:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-small {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-small:hover {
+            background: var(--primary);
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--gray);
+        }
+
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- LOGIN -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="logo">
+                <h1>CRM Agent</h1>
+                <p>Sistem de gestionare clienti</p>
+            </div>
+            <div class="error-msg" id="loginError"></div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Utilizator</label>
+                    <input type="text" id="username" placeholder="Utilizator" required>
+                </div>
+                <div class="form-group">
+                    <label>Parola</label>
+                    <input type="password" id="password" placeholder="Parola" required>
+                </div>
+                <button type="submit" class="btn">Autentificare</button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h1>CRM - <span id="userRole">Agent</span></h1>
+            <div class="user-info">
+                <span id="welcomeMsg">Buna, Agent!</span>
+                <a class="logout-btn" onclick="logout()">Deconectare</a>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showPage('home')" id="tab-home">Dashboard</div>
+            <div class="nav-tab" onclick="showPage('clients')" id="tab-clients">Clienti</div>
+            <div class="nav-tab" onclick="showPage('add-client')" id="tab-add">Adauga Client</div>
+            <div class="nav-tab" onclick="showPage('gdpr-list')" id="tab-gdpr-list" style="display: none;">✅ GDPR Semnat</div>
+            <div class="nav-tab" onclick="showPage('settings')" id="tab-settings" style="display: none;">Setari</div>
+        </div>
+
+        <div class="content">
+            <!-- HOME / DASHBOARD -->
+            <div class="page active" id="page-home">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalClients">0</div>
+                        <div class="stat-label">Total Clienti</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="myClients">0</div>
+                        <div class="stat-label">Clientii Mei</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="newClients">0</div>
+                        <div class="stat-label">Clienti Noi</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Bine ai venit, <span id="welcomeName">Agent</span>!</h2>
+                    <p id="welcomeText">Completezi datele clientilor si apoi le trimiti mai departe.</p>
+                </div>
+            </div>
+
+            <!-- CLIENTS LIST -->
+            <div class="page" id="page-clients">
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h2 style="margin:0;">Lista Clienti</h2>
+                        <button onclick="syncManual()" id="btnSyncGdpr" style="padding:8px 16px;background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">🔄 Sincronizeaza GDPR</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nume</th>
+                                    <th>Email</th>
+                                    <th>Telefon</th>
+                                    <th>Agent</th>
+                                    <th>Status</th>
+                                    <th>GDPR</th>
+                                    <th>Fisiere</th>
+                                    <th>Data</th>
+                        <th id="thActiuni"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD CLIENT (AGENT) -->
+            <div class="page" id="page-add-client">
+                <div class="card">
+                    <h2>Adauga Client Nou</h2>
+                    <form onsubmit="addClient(event)">
+                        <div class="add-form">
+                            <div class="form-group">
+                                <label>Nume Client *</label>
+                                <input type="text" id="clientName" placeholder="Numele complet" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="clientEmail" placeholder="email@exemplu.ro" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Telefon *</label>
+                                <input type="tel" id="clientPhone" placeholder="+40712345678" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Observatii</label>
+                                <input type="text" id="clientNotes" placeholder="Optional">
+                            </div>
+                        </div>
+
+                        <!-- Upload Fisiere -->
+                        <div class="form-group">
+                            <label>Ataseaza Fisiere</label>
+                            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                                <input type="file" id="fileInput" multiple onchange="handleFileSelect(event)">
+                                <p style="color: var(--primary);">
+                                    <span style="font-size: 24px;">+</span><br>
+                                    Click pentru a adauga fisiere
+                                </p>
+                                <p style="color: var(--gray); font-size: 12px; margin-top: 5px;">
+                                    PDF, imagini, documente (max 5MB fiecare)
+                                </p>
+                            </div>
+                            <div class="file-list" id="fileList"></div>
+                        </div>
+
+                        <!-- SECTIUNEA CREDIT -->
+                        <div style="margin-top:24px;padding-top:20px;border-top:2px solid #E5E7EB;">
+                            <h3 style="font-size:15px;color:#1D4ED8;margin-bottom:16px;">💳 Solicitare Credit</h3>
+                            <div class="add-form">
+                                <div class="form-group">
+                                    <label>Tip Credit</label>
+                                    <select id="creditTip">
+                                        <option value="">-- Selecteaza --</option>
+                                        <option value="Imobiliar">🏠 Imobiliar</option>
+                                        <option value="Consum">💳 Consum</option>
+                                        <option value="Refinantare">🔄 Refinantare</option>
+                                        <option value="Overdraft">💰 Overdraft</option>
+                                        <option value="IMM">🏢 IMM</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Suma Solicitata (RON)</label>
+                                    <input type="number" id="creditSuma" placeholder="ex: 50000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Perioada (luni)</label>
+                                    <input type="number" id="creditPerioada" placeholder="ex: 60">
+                                </div>
+                                <div class="form-group">
+                                    <label>Venit Net Lunar (RON)</label>
+                                    <input type="number" id="creditVenit" placeholder="ex: 5000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tip Venit</label>
+                                    <select id="creditTipVenit">
+                                        <option value="">-- Selecteaza --</option>
+                                        <option value="Salariat">👔 Salariat</option>
+                                        <option value="PFA">📋 PFA</option>
+                                        <option value="Pensionar">🧓 Pensionar</option>
+                                        <option value="Alt venit">💼 Alt venit</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Credite Existente (RON/luna)</label>
+                                    <input type="number" id="creditExistent" placeholder="0 daca nu are">
+                                </div>
+                                <div class="form-group">
+                                    <label>Status Dosar</label>
+                                    <select id="creditStatus">
+                                        <option value="Nou">🆕 Nou</option>
+                                        <option value="In analiza">🔍 In analiza</option>
+                                        <option value="Trimis banca">📤 Trimis banca</option>
+                                        <option value="Aprobat">✅ Aprobat</option>
+                                        <option value="Respins">❌ Respins</option>
+                                        <option value="Acordat">🎉 Acordat</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Banca</label>
+                                    <select id="creditBanca">
+                                        <option value="">-- Selecteaza --</option>
+                                        <option value="BCR">BCR</option>
+                                        <option value="BRD">BRD</option>
+                                        <option value="ING">ING</option>
+                                        <option value="Raiffeisen">Raiffeisen</option>
+                                        <option value="Banca Transilvania">Banca Transilvania</option>
+                                        <option value="CEC Bank">CEC Bank</option>
+                                        <option value="Alpha Bank">Alpha Bank</option>
+                                        <option value="OTP Bank">OTP Bank</option>
+                                        <option value="UniCredit">UniCredit</option>
+                                        <option value="Alta banca">Alta banca</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Observatii</label>
+                                    <textarea id="creditObservatii" placeholder="Note despre dosar..." style="height:80px;resize:vertical;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Salveaza Client</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- GDPR SEMNAT (ADMIN ONLY) -->
+            <div class="page" id="page-gdpr-list">
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h2 style="margin:0;">✅ Clienti cu GDPR Semnat</h2>
+                        <span id="gdprSignedCount" style="background:#D1FAE5;color:#065f46;padding:6px 14px;border-radius:20px;font-size:14px;font-weight:700;"></span>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nume Client</th>
+                                    <th>Email</th>
+                                    <th>Telefon</th>
+                                    <th>Agent</th>
+                                    <th>Data Semnare</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gdprSignedTable"></tbody>
+                        </table>
+                    </div>
+                    <div id="gdprEmptyMsg" style="display:none;text-align:center;padding:40px;color:#6B7280;">
+                        <div style="font-size:48px;margin-bottom:10px;">📋</div>
+                        <p>Niciun client nu a semnat GDPR inca.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS (ADMIN ONLY) -->
+            <div class="page" id="page-settings">
+                <div class="card">
+                    <h2>Setari Sistem</h2>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <div>
+                                <strong>Denumire Companie</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Numele care apare in header</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" id="settingCompany" style="width: 200px;" value="CRM Agent">
+                                <button class="btn btn-success" style="width: auto; padding: 8px 15px;"
+                                    onclick="saveCompanyName()">Salveaza</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Mesaj Bun Venit</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Textul de pe pagina principala</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" id="settingWelcome" style="width: 200px;"
+                                    value="Completezi datele clientilor">
+                                <button class="btn btn-success" style="width: auto; padding: 8px 15px;"
+                                    onclick="saveWelcomeMsg()">Salveaza</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Telefon Admin WhatsApp</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Numarul tau (ex: 40722123456) pentru a
+                                    primi GDPR semnat</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" id="settingAdminPhone" style="width: 200px;"
+                                    placeholder="40722123456">
+                                <button class="btn btn-success" style="width: auto; padding: 8px 15px;"
+                                    onclick="saveAdminPhone()">Salveaza</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <strong>📧 Email Admin</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Emailul tau unde primesti confirmarile GDPR semnate</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="email" id="settingAdminEmail" style="width: 260px;"
+                                    placeholder="admin@gmail.com" value="bagaiteanugeorge.gb@gmail.com">
+                                <button class="btn btn-success" style="width: auto; padding: 8px 15px;"
+                                    onclick="saveAdminEmail()">Salveaza</button>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>Salveaza Date</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Descarca toate datele pe PC</p>
+                            </div>
+                            <button class="btn" style="width: auto; padding: 10px 20px; background: var(--success);"
+                                onclick="exportData()">Descarca</button>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Resetare Date</strong>
+                                <p style="color: var(--gray); font-size: 14px;">Sterge toti clientii</p>
+                            </div>
+                            <button class="btn btn-danger" style="width: auto; padding: 10px 20px;"
+                                onclick="resetData()">Reseteaza</button>
+                        </div>
+                    </div>
+                    <button class="btn" style="margin-top: 20px;" onclick="saveSettings()">Salveaza Setari</button>
+                    <div id="adminCredentialsSection" style="display: none; margin-top: 20px;">
+                        <button class="btn" onclick="exportCredentials()">Descarca Credentiale</button>
+                    </div>
+
+                    <!-- PAROLE ACCES -->
+                    <div id="paroleSectiune" style="margin-top:28px;display:none;">
+                        <h3 style="font-size:15px;color:#1F2937;margin-bottom:14px;">🔑 Parole Acces Sistem</h3>
+                        <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:16px;">
+                            <p style="font-size:12px;color:#92400E;margin-bottom:12px;">⚠️ Vizibil doar pentru admin. Nu distribuiti aceste informatii.</p>
+                            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                                <tr style="background:#FEF3C7;">
+                                    <th style="padding:8px 12px;text-align:left;border-radius:6px 0 0 6px;">Utilizator</th>
+                                    <th style="padding:8px 12px;text-align:left;">Parola</th>
+                                    <th style="padding:8px 12px;text-align:left;border-radius:0 6px 6px 0;">Rol</th>
+                                </tr>
+                                <tr><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">agent1</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">INTERADA3</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">Agent</td></tr>
+                                <tr><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">agent2</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">INTERADA7</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">Agent</td></tr>
+                                <tr><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">agent3</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">INTERADA1</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">Agent</td></tr>
+                                <tr><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">agent4</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">INTERADA9</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">Agent</td></tr>
+                                <tr><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">agent5</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">INTERADA5</td><td style="padding:8px 12px;border-bottom:1px solid #FDE68A;">Agent</td></tr>
+                                <tr style="background:#FEF3C7;font-weight:700;"><td style="padding:8px 12px;">admin</td><td style="padding:8px 12px;">admin123</td><td style="padding:8px 12px;">Administrator</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Succes!</h2>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <p id="successMessage">Clientul a fost adaugat cu succes!</p>
+            <button class="btn" style="margin-top: 20px;" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (compat version - functii globale) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+        // === FIREBASE CONFIG ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyBrIktFOPbTVzG6ocdpP9jTLP8YaU4TXvU",
+            authDomain: "crm-interada.firebaseapp.com",
+            projectId: "crm-interada",
+            storageBucket: "crm-interada.firebasestorage.app",
+            messagingSenderId: "317559859834",
+            appId: "1:317559859834:web:bffc67001f44e9bf97a9c3"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // === FIREBASE HELPERS ===
+        // Wrapper async peste tot codul - folosim window.dbClients ca referinta globala
+        window.db = db; // Firebase compat
+
+        async function getClientsAsync() {
+            try {
+                const snap = await db.collection('clients').get();
+                return snap.docs.map(d => ({ ...d.data(), id: d.data().id || d.id }));
+            } catch(e) {
+                console.error('Firebase getClients error:', e);
+                return [];
+            }
+        }
+
+        async function saveClientAsync(client) {
+            try {
+                await db.collection('clients').doc(String(client.id)).set(client);
+            } catch(e) {
+                console.error('Firebase saveClient error:', e);
+            }
+        }
+
+        async function deleteClientAsync(clientId) {
+            try {
+                await db.collection('clients').doc(String(clientId)).delete();
+            } catch(e) {
+                console.error('Firebase deleteClient error:', e);
+            }
+        }
+
+        async function getSettingsAsync() {
+            try {
+                const snap = await db.collection('settings').doc('main').get();
+                return snap.exists ? snap.data() : {};
+            } catch(e) {
+                return JSON.parse(localStorage.getItem('crm_settings') || '{}');
+            }
+        }
+
+        async function saveSettingsAsync(settings) {
+            try {
+                await db.collection('settings').doc('main').set(settings);
+            } catch(e) {
+                localStorage.setItem('crm_settings', JSON.stringify(settings));
+            }
+        }
+
+        // Cache local pentru clienti (pentru functiile sincrone)
+        window._clientsCache = [];
+
+        function getClients() {
+            return window._clientsCache;
+        }
+
+        async function refreshClients() {
+            window._clientsCache = await getClientsAsync();
+            return window._clientsCache;
+        }
+
+        // === DATE UTILIZATORI ===
+        const users = {
+            'agent1': { password: 'INTERADA3', role: 'agent', name: 'Agent 1' },
+            'agent2': { password: 'INTERADA7', role: 'agent', name: 'Agent 2' },
+            'agent3': { password: 'INTERADA1', role: 'agent', name: 'Agent 3' },
+            'agent4': { password: 'INTERADA9', role: 'agent', name: 'Agent 4' },
+            'agent5': { password: 'INTERADA5', role: 'agent', name: 'Agent 5' },
+            'admin': { password: 'admin123', role: 'admin', name: 'Administrator' }
+        };
+
+        // === STATE ===
+        let currentUser = null;
+
+        // === INITIALIZARE ===
+        async function init() {
+            // Verifica daca adminul vine cu link de confirmare GDPR
+            checkGDPRConfirm();
+
+            // Check for GDPR link first
+            if (checkGDPR()) {
+                return;
+            }
+
+            // Preincarca clientii din Firebase in cache
+            await refreshClients();
+        }
+
+        // === LOGIN ===
+        let failedAttempts = 0;
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
+
+            if (users[username] && users[username].password === password) {
+                currentUser = { username, ...users[username] };
+                failedAttempts = 0;
+
+                const loggedInBefore = localStorage.getItem('crm_logged_' + username);
+
+                if (!loggedInBefore && currentUser.role === 'agent') {
+                    showCredentialsModal(username, users[username].password);
+                    localStorage.setItem('crm_logged_' + username, 'true');
+                }
+
+                showDashboard();
+            } else {
+                failedAttempts++;
+                if (failedAttempts >= 3) {
+                    document.getElementById('loginError').innerHTML =
+                        '<div style="text-align:center;padding:10px;">' +
+                        '<p style="color:var(--danger);margin-bottom:10px;">Ai incercat de 3 ori. Suna pentru ajutor:</p>' +
+                        '<p style="font-size:18px;font-weight:bold;">📞 +40 712 345 678</p>' +
+                        '</div>';
+                } else {
+                    document.getElementById('loginError').textContent =
+                        'Utilizator sau parola incorecta! (' + (3 - failedAttempts) + ' incercari ramase)';
+                }
+            }
+        }
+
+        // Show credentials modal on first login
+        function showCredentialsModal(username, password) {
+            const modal = document.getElementById('successModal');
+            const title = modal.querySelector('h2');
+            const message = document.getElementById('successMessage');
+            const btn = modal.querySelector('.btn');
+
+            title.textContent = 'Datele tale de logare';
+            message.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="margin-bottom: 15px;">Salveaza aceste date pentru a te putea loga data viitoare:</p>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p><strong>Username:</strong> ${username}</p>
+                        <p><strong>Parola:</strong> ${password}</p>
+                    </div>
+                </div>
+            `;
+            btn.textContent = 'Am inteles';
+            btn.onclick = function () {
+                closeModal();
+            };
+            modal.classList.add('active');
+        }
+
+        // === DASHBOARD ===
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+
+            // Set user info
+            document.getElementById('welcomeMsg').textContent = `Buna, ${currentUser.name}!`;
+            document.getElementById('welcomeName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Birou' : 'Agent';
+
+            // Show/hide settings for admin
+            if (currentUser.role === 'admin') {
+                document.getElementById('tab-settings').style.display = 'block';
+                document.getElementById('tab-gdpr-list').style.display = 'block';
+                document.getElementById('adminCredentialsSection').style.display = 'block';
+                document.getElementById('paroleSectiune').style.display = 'block';
+                document.getElementById('welcomeText').textContent = 'Vezi toti clientii de la agenti si modifica setarile.';
+
+                // Admin sees total clients
+                document.getElementById('totalClients').parentElement.style.display = 'block';
+                document.querySelectorAll('.stat-label')[0].textContent = 'Total Clienti';
+                document.querySelectorAll('.stat-label')[1].textContent = 'Clienti Noi';
+                document.querySelectorAll('.stat-label')[2].textContent = 'In Lucru';
+            } else {
+                document.getElementById('tab-settings').style.display = 'none';
+                document.getElementById('welcomeText').textContent = 'Completezi datele clientilor si apoi le trimiti mai departe.';
+
+                // Agent sees only "Clienti" box
+                document.getElementById('totalClients').parentElement.style.display = 'none';
+                document.getElementById('myClients').parentElement.style.display = 'block';
+                document.getElementById('newClients').parentElement.style.display = 'none';
+                document.querySelectorAll('.stat-label')[1].textContent = 'Clienti';
+            }
+
+            // Load data din Firebase
+            refreshClients().then(function() {
+                loadClients();
+                updateStats();
+            });
+            loadSettings().catch(function(e){ console.error('loadSettings error:', e); });
+
+            // Daca adminul vine din link de confirmare GDPR, arata banner succes
+            if (window._gdprConfirmSuccess) {
+                window._gdprConfirmSuccess = false;
+                var banner = document.createElement('div');
+                banner.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#10B981,#059669);color:white;padding:16px 28px;border-radius:12px;font-size:15px;font-weight:700;z-index:9999;box-shadow:0 8px 25px rgba(16,185,129,0.4);text-align:center;';
+                banner.innerHTML = '✅ GDPR CONFIRMAT! Clientul a semnat acordul — casuta a fost actualizata automat.';
+                document.body.appendChild(banner);
+                setTimeout(function() { banner.style.opacity='0'; banner.style.transition='opacity 0.5s'; setTimeout(function(){banner.remove();},500); }, 4000);
+            }
+
+            // Sincronizare automata GDPR din webhook (verifica daca clienti au semnat)
+            syncGDPRFromWebhook(function(updated) {
+                if (updated > 0) {
+                    loadClients();
+                    updateStats();
+                    // Banner notificare
+                    var b = document.createElement('div');
+                    b.style.cssText = 'position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#10B981,#059669);color:white;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:9999;box-shadow:0 8px 25px rgba(16,185,129,0.4);max-width:320px;';
+                    b.innerHTML = '✅ ' + updated + ' client(i) au semnat GDPR!<br><small style="font-weight:400;opacity:0.9;">Casutele au fost actualizate automat.</small>';
+                    document.body.appendChild(b);
+                    setTimeout(function(){ b.style.opacity='0'; b.style.transition='opacity 0.5s'; setTimeout(function(){b.remove();},500); }, 5000);
+                }
+            });
+        }
+
+        // === NAVIGARE ===
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            // Show selected
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('tab-' + pageId).classList.add('active');
+
+            if (pageId === 'clients' || pageId === 'home') {
+                refreshClients().then(function() {
+                    loadClients();
+                    updateStats();
+                });
+            }
+            if (pageId === 'gdpr-list') {
+                refreshClients().then(function() {
+                    loadGDPRList();
+                });
+            }
+        }
+
+        // === CLIENTI ===
+
+        function loadClients() {
+            const clients = getClients();
+            const tbody = document.getElementById('clientsTable');
+            tbody.innerHTML = '';
+            // Arata coloana Actiuni doar pentru admin
+            var thActiuni = document.getElementById('thActiuni');
+            if (thActiuni) thActiuni.textContent = currentUser.role === 'admin' ? 'Actiuni' : '';
+
+            // Filter by role
+            let filteredClients = clients;
+            if (currentUser.role === 'agent') {
+                filteredClients = clients.filter(c => c.agent === currentUser.username);
+            }
+
+            filteredClients.forEach(client => {
+                const tr = document.createElement('tr');
+
+                // Files column
+                let filesHtml = '';
+                if (client.files && client.files.length > 0) {
+                    filesHtml = `<div class="files-column">`;
+                    client.files.forEach((file, idx) => {
+                        if (file.type === 'gdpr_acord') {
+                            filesHtml += `<a href="#" onclick="viewGDPRAcord('${client.id}', ${idx}); return false;" title="${file.name}" style="color:#059669;font-weight:600;">
+                                📋 Acord GDPR</a><br>`;
+                        } else {
+                            filesHtml += `<a href="#" onclick="downloadFile('${file.data}', '${file.name}', '${file.type}'); return false;" title="${file.name}">
+                                📎 ${file.name.substring(0, 15)}${file.name.length > 15 ? '...' : ''}</a><br>`;
+                        }
+                    });
+                    filesHtml += `</div>`;
+                } else {
+                    filesHtml = '<span style="color: var(--gray); font-size: 12px;">-</span>';
+                }
+
+                // Add file button for admin
+                let addFileBtn = '';
+                if (currentUser.role === 'admin') {
+                    addFileBtn = `<button class="btn-add-file" onclick="addFileToClient(${client.id})" title="Adauga fisier">+</button>`;
+                    filesHtml += addFileBtn;
+                }
+
+                // GDPR column - buton doar pentru admin, agentii vad doar statusul
+                let gdprHtml = '';
+                if (client.gdprSigned) {
+                    gdprHtml = `<span style="color: white; background: #27ae60; padding: 5px 10px; border-radius: 15px; font-size: 12px;" title="Semnat: ${client.gdprSignedDate ? new Date(client.gdprSignedDate).toLocaleString('ro') : ''}">✓ GDPR</span>`;
+                } else if (currentUser.role === 'admin') {
+                    if (client.gdprSent) {
+                        gdprHtml = `<button class="btn-small" onclick="sendGDPR(${client.id})" title="Trimite din nou link">📨 Asteapta</button>`;
+                    } else {
+                        gdprHtml = `<button class="btn-small" onclick="sendGDPR(${client.id})">📨 GDPR</button>`;
+                    }
+                } else {
+                    gdprHtml = `<span style="color:#9CA3AF;font-size:12px;">⏳ Necompletat</span>`;
+                }
+
+                // Status - only admin can change, agents see it as badge
+                let statusHtml;
+                if (currentUser.role === 'admin') {
+                    statusHtml = `
+                        <select class="status-dropdown" onchange="changeStatus(${client.id}, this.value)">
+                            <option value="new" ${client.status === 'new' ? 'selected' : ''}>Nou</option>
+                            <option value="working" ${client.status === 'working' ? 'selected' : ''}>In Lucru</option>
+                            <option value="done" ${client.status === 'done' ? 'selected' : ''}>Finalizat</option>
+                        </select>
+                    `;
+                } else {
+                    // Agent sees status as badge (read-only)
+                    statusHtml = `<span class="status-badge status-${client.status}">${getStatusLabel(client.status)}</span>`;
+                }
+
+                // Buton stergere doar pentru admin
+                let deleteBtn = '';
+                if (currentUser.role === 'admin') {
+                    deleteBtn = `<button onclick="stergeClient(${client.id})" style="background:#EF4444;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;" title="Sterge client">🗑️</button>`;
+                }
+
+                tr.innerHTML = `
+                    <td><strong>${client.name}</strong></td>
+                    <td>${client.email}</td>
+                    <td>${client.phone}</td>
+                    <td>${client.agent}</td>
+                    <td>${statusHtml}</td>
+                    <td>${gdprHtml}</td>
+                    <td>${filesHtml}</td>
+                    <td>${new Date(client.date).toLocaleDateString('ro')}</td>
+                    <td>${deleteBtn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewGDPRAcord(clientId, fileIdx) {
+            var clients = getClients();
+            var client = clients.find(c => String(c.id) === String(clientId));
+            if (!client || !client.files || !client.files[fileIdx]) return;
+
+            var acord = client.files[fileIdx];
+            var now = acord.date ? new Date(acord.date).toLocaleString('ro-RO') : '-';
+
+            var modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;box-sizing:border-box;';
+
+            var div = document.createElement('div');
+            div.style.cssText = 'background:white;padding:28px;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+
+            // PDF sau text vechi
+            // Construieste continut modal
+            var raspunsuri = acord.raspunsuri || {};
+            var intrebari = [
+                'Prelucrarea datelor personale de catre Interada Consulting',
+                'Utilizarea datelor in scopuri de marketing',
+                'Comunicare oportunitati BROKER DE CREDITE',
+                'Informare doar la sediul Interada Consulting',
+                'Comunicare doar prin intermediul Interada Consulting',
+                'Comunicare pe cale electronica (email/telefon)',
+                'Comunicare prin posta sau curier'
+            ];
+
+            var raspunsuriHtml = '';
+            for (var i = 1; i <= 7; i++) {
+                var val = raspunsuri['Punctul ' + i] || '-';
+                var isDA = val === 'DA';
+                raspunsuriHtml += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;margin-bottom:6px;border-radius:8px;background:' + (isDA ? '#F0FDF4' : '#FFF7ED') + ';border:1px solid ' + (isDA ? '#D1FAE5' : '#FED7AA') + ';">' +
+                    '<span style="font-size:12px;color:#374151;">Punctul ' + i + ' - ' + intrebari[i-1] + '</span>' +
+                    '<span style="font-weight:700;font-size:13px;color:' + (isDA ? '#059669' : '#EA580C') + ';">' + val + '</span>' +
+                    '</div>';
+            }
+
+            var semnaturaHtml = acord.semnatura
+                ? '<div style="margin:12px 0;"><strong style="font-size:12px;color:#374151;">Semnatura:</strong><br><img src="' + acord.semnatura + '" style="border:1px solid #E5E7EB;border-radius:8px;max-width:100%;margin-top:6px;background:#FAFFFE;"></div>'
+                : '';
+
+            div.innerHTML =
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">' +
+                '<span style="font-size:32px;">📋</span>' +
+                '<div><h2 style="margin:0;color:#1F2937;font-size:18px;">Acord GDPR Semnat</h2>' +
+                '<p style="margin:0;color:#6B7280;font-size:13px;">Client: <strong>' + client.name + '</strong> &nbsp;·&nbsp; ' + now + '</p></div>' +
+                '</div>' +
+                '<div style="background:#F0FDF4;border:1px solid #D1FAE5;border-radius:10px;padding:10px;margin-bottom:14px;font-size:13px;color:#065f46;">✅ Acord semnat electronic si salvat in baza de date</div>' +
+                '<div style="max-height:280px;overflow-y:auto;margin-bottom:12px;">' + raspunsuriHtml + '</div>' +
+                semnaturaHtml +
+                '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="width:100%;padding:11px;background:#6B7280;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;margin-top:8px;">Inchide</button>';
+
+                        modal.appendChild(div);
+            document.body.appendChild(modal);
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        }
+
+        async function stergeClient(clientId) {
+            if (currentUser.role !== 'admin') {
+                alert('Doar administratorul poate sterge clienti!');
+                return;
+            }
+
+            var clients = getClients();
+            var client = clients.find(c => String(c.id) === String(clientId));
+            var nume = client ? client.name : 'acest client';
+
+            if (!confirm('Esti sigur ca vrei sa stergi clientul "' + nume + '"?\nAceasta actiune nu poate fi anulata!')) {
+                return;
+            }
+
+            await deleteClientAsync(clientId);
+            await refreshClients();
+            loadClients();
+            updateStats();
+
+            // Banner confirmare
+            var banner = document.createElement('div');
+            banner.style.cssText = 'position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#EF4444,#DC2626);color:white;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:9999;box-shadow:0 8px 25px rgba(239,68,68,0.4);';
+            banner.textContent = '🗑️ Clientul "' + nume + '" a fost sters.';
+            document.body.appendChild(banner);
+            setTimeout(function(){ banner.style.opacity='0'; banner.style.transition='opacity 0.5s'; setTimeout(function(){banner.remove();},500); }, 3000);
+        }
+
+                async function changeStatus(clientId, newStatus) {
+            if (currentUser.role !== 'admin') {
+                alert('Doar administratorul poate modifica statusul!');
+                loadClients();
+                return;
+            }
+            try {
+                await db.collection('clients').doc(String(clientId)).update({ status: newStatus });
+                await refreshClients();
+                updateStats();
+            } catch(e) {
+                console.error('changeStatus error:', e);
+            }
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'new': 'Nou',
+                'working': 'In Lucru',
+                'done': 'Finalizat'
+            };
+            return labels[status] || status;
+        }
+
+        async function addClient(e) {
+            e.preventDefault();
+
+            const client = {
+                id: Date.now(),
+                name: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                phone: document.getElementById('clientPhone').value,
+                notes: document.getElementById('clientNotes').value,
+                files: selectedFiles,
+                agent: currentUser.username,
+                agentName: currentUser.name,
+                status: 'new',
+                credit: {
+                    tip: document.getElementById('creditTip').value,
+                    suma: document.getElementById('creditSuma').value,
+                    perioada: document.getElementById('creditPerioada').value,
+                    venit: document.getElementById('creditVenit').value,
+                    tipVenit: document.getElementById('creditTipVenit').value,
+                    creditExistent: document.getElementById('creditExistent').value,
+                    status: document.getElementById('creditStatus').value,
+                    banca: document.getElementById('creditBanca').value,
+                    observatii: document.getElementById('creditObservatii').value,
+                    dataCreare: new Date().toISOString()
+                },
+                date: new Date().toISOString(),
+                // GDPR fields
+                gdprSent: false,
+                gdprSigned: false,
+                gdprSignedDate: null,
+                gdprSignedFile: null,
+                gdprToken: Math.random().toString(36).substring(2, 15)
+            };
+
+            // Salveaza in Firebase
+            await saveClientAsync(client);
+            await refreshClients();
+
+            // Reset form
+            e.target.reset();
+            selectedFiles = []; // Reset files
+            document.getElementById('fileList').innerHTML = ''; // Clear file list
+
+            // Show success - check if dashboard elements exist
+            const successMsg = document.getElementById('successMessage');
+            const successModal = document.getElementById('successModal');
+
+            if (successMsg && successModal) {
+                successMsg.textContent = 'Clientul a fost adaugat cu succes!';
+                successModal.classList.add('active');
+            } else {
+                alert('Clientul a fost adaugat cu succes!');
+            }
+        }
+
+        // === FILE HANDLING ===
+        let selectedFiles = [];
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Fisierul ' + file.name + ' este prea mare. Maxim 5MB.');
+                    continue;
+                }
+
+                // Convert to base64
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: event.target.result
+                    };
+                    selectedFiles.push(fileData);
+                    renderFileList();
+                };
+                reader.readAsDataURL(file);
+            }
+            // Clear input for next selection
+            e.target.value = '';
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.innerHTML = `
+                    <span class="file-icon">📎</span>
+                    <span>${file.name.substring(0, 20)}${file.name.length > 20 ? '...' : ''}</span>
+                    <span class="remove" onclick="removeFile(${index})">&times;</span>
+                `;
+                fileList.appendChild(div);
+            });
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        function downloadFile(data, name, type) {
+            const link = document.createElement('a');
+            link.href = data;
+            link.download = name;
+            link.click();
+        }
+
+        // Add file to existing client (for admin)
+        let currentEditingClientId = null;
+
+        function addFileToClient(clientId) {
+            // Only admin can add files
+            if (currentUser.role !== 'admin') {
+                alert('Doar administratorul poate adauga fisiere!');
+                return;
+            }
+            currentEditingClientId = clientId;
+            // Create hidden file input and trigger click
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.onchange = function (e) {
+                handleAdminFileSelect(e, clientId);
+            };
+            input.click();
+        }
+
+        function handleAdminFileSelect(e, clientId) {
+            const files = e.target.files;
+            if (!files.length) return;
+
+            const clients = getClients();
+            const clientIndex = clients.findIndex(c => c.id === clientId);
+            if (clientIndex === -1) return;
+
+            let processedCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Fisierul ' + file.name + ' este prea mare. Maxim 5MB.');
+                    continue;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: event.target.result
+                    };
+
+                    // Initialize files array if not exists
+                    if (!clients[clientIndex].files) {
+                        clients[clientIndex].files = [];
+                    }
+
+                    clients[clientIndex].files.push(fileData);
+                    processedCount++;
+
+                    // Save when all files processed
+                    if (processedCount === files.length) {
+                        // Save updated client to Firebase
+                        saveClientAsync(clients[clientIndex]).then(function() {
+                            refreshClients().then(function() { loadClients(); });
+                        });
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateStats() {
+            const clients = getClients();
+
+            if (currentUser.role === 'agent') {
+                // For agents: show only their clients count
+                const myClients = clients.filter(c => c.agent === currentUser.username);
+
+                // Hide all stat boxes, show only one with "Clienti"
+                document.getElementById('totalClients').parentElement.style.display = 'none';
+                document.getElementById('myClients').parentElement.style.display = 'block';
+                document.getElementById('newClients').parentElement.style.display = 'none';
+
+                document.getElementById('myClients').textContent = myClients.length;
+            } else {
+                // For admin: show all stats
+                document.getElementById('totalClients').parentElement.style.display = 'block';
+                document.getElementById('myClients').parentElement.style.display = 'block';
+                document.getElementById('newClients').parentElement.style.display = 'block';
+
+                document.getElementById('totalClients').textContent = clients.length;
+                document.getElementById('myClients').textContent = clients.filter(c => c.status === 'new').length;
+                document.getElementById('newClients').textContent = clients.filter(c => c.status === 'working').length;
+            }
+        }
+
+        // === GDPR FUNCTIONS ===
+
+        async function sendGDPR(clientId) {
+            var clients = getClients();
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (String(clients[i].id) === String(clientId)) { client = clients[i]; break; }
+            }
+            if (!client) { alert('Client negasit!'); return; }
+
+            if (!client.gdprToken) {
+                client.gdprToken = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+                for (var i = 0; i < clients.length; i++) {
+                    if (String(clients[i].id) === String(clientId)) { clients[i].gdprToken = client.gdprToken; break; }
+                }
+                await saveClientAsync(clients.find(c => String(c.id) === String(clientId)));
+                await refreshClients();
+            }
+
+            var settings = await getSettingsAsync();
+            var gdprBaseUrl = settings.gdprUrl || 'https://iceman77gb-jpg.github.io/interada-crm/gdpr.html';
+
+            var adminPhone = (settings.adminPhone || '').replace(/\D/g, '');
+            var adminEmail = settings.adminEmail || 'bagaiteanugeorge.gb@gmail.com';
+            var gdprLink = gdprBaseUrl
+                + '?gdpr=' + client.gdprToken
+                + '&cn=' + encodeURIComponent(client.name)
+                + '&ap=' + adminPhone
+                + '&ae=' + encodeURIComponent(adminEmail)
+                + '&ce=' + encodeURIComponent(client.email || '')
+                + '&cp=' + encodeURIComponent(client.phone || '');
+
+            // Marcheaza ca trimis
+            client.gdprSent = true;
+            client.gdprSentDate = new Date().toISOString();
+            try {
+                await db.collection('clients').doc(String(clientId)).update({ gdprSent: true, gdprSentDate: client.gdprSentDate });
+                await refreshClients();
+            } catch(e) { console.error(e); }
+
+            // Compune email HTML frumos pentru client
+            var subject = 'Acord GDPR - Va rugam semnati documentul';
+
+            var emailBody = 
+'Buna ziua, ' + client.name + ',' +
+'\n\n' +
+'Va contactam pentru a va solicita semnarea Acordului GDPR,' +
+'\nnecesar pentru a putea procesa datele dumneavoastra personale' +
+'\nin conformitate cu Regulamentul (UE) 2016/679.' +
+'\n\n' +
+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' +
+'\n📋  ACORD GDPR' +
+'\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' +
+'\n\n' +
+'Prin semnarea acestui acord, confirmati ca sunteti de acord' +
+'\ncu prelucrarea datelor dumneavoastra personale (nume, email,' +
+'\ntelefon) exclusiv in scopul prestarii serviciilor solicitate.' +
+'\n\n' +
+'✔  Datele nu vor fi transmise catre terti' +
+'\n✔  Puteti retrage acordul oricand' +
+'\n✔  Aveti dreptul la acces, rectificare si stergere' +
+'\n\n' +
+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' +
+'\n\n' +
+'👇  APASATI LINKUL DE MAI JOS PENTRU A SEMNA:' +
+'\n\n' +
+'   ➡  ' + gdprLink +
+'\n\n' +
+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' +
+'\n\n' +
+'Dupa ce accesati linkul, veti vedea pagina cu acordul GDPR.' +
+'\nApasati butonul  ✅ SEMNEAZA  si apoi  📤 TRIMITE.' +
+'\nIntreaga procedura dureaza mai putin de 1 minut.' +
+'\n\n' +
+'Va multumim,' +
+'\nEchipa Interada';
+
+            // Copiaza linkul in clipboard automat
+            navigator.clipboard.writeText(gdprLink).catch(function(){});
+
+            // Deschide Gmail compose cu subiectul si destinatarul gata
+            // Agentul lipeste linkul manual in email (Ctrl+V)
+            var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1'
+                + '&to=' + encodeURIComponent(client.email || '')
+                + '&su=' + encodeURIComponent(subject)
+                + '&body=' + encodeURIComponent(emailBody);
+            window.open(gmailUrl, '_blank');
+
+            loadClients();
+            
+            // Arata si modalul cu linkul ca backup
+            showGDPRLinkModal(client, gdprLink);
+        }
+
+        function showGDPRLinkModal(client, link) {
+            var oldModal = document.getElementById('gdprLinkModal');
+            if (oldModal) oldModal.remove();
+
+            var modal = document.createElement('div');
+            modal.id = 'gdprLinkModal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;box-sizing:border-box;';
+
+            var clientPhone = client.phone ? client.phone.replace(/\D/g, '') : '';
+            var clientEmail = client.email || '';
+            var settings = JSON.parse(localStorage.getItem('crm_settings') || '{}');
+            var adminEmail = settings.adminEmail || 'bagaiteanugeorge.gb@gmail.com';
+
+            var subject = 'Acord GDPR - Va rugam semnati documentul';
+            var modalBody =
+'Buna ziua, ' + client.name + ',' +
+'\n\nVa contactam din partea INTERADA CONSULTING pentru semnarea Acordului GDPR.' +
+'\n\nApasati linkul de mai jos pentru a semna:' +
+'\n\n' + link +
+'\n\nCompletati cele 7 intrebari cu DA/NU, semnati si apasati SEMNEAZA SI TRIMITE.' +
+'\n\nVa multumim,\nEchipa Interada Consulting';
+            var mailtoHref = 'https://mail.google.com/mail/?view=cm&fs=1'
+                + '&to=' + encodeURIComponent(clientEmail)
+                + '&su=' + encodeURIComponent(subject)
+                + '&body=' + encodeURIComponent(modalBody);
+
+            var div = document.createElement('div');
+            div.style.cssText = 'background:white;padding:28px;border-radius:16px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+
+            var waText = 'Buna ziua ' + client.name + '! Va rugam sa semnati Acordul GDPR accesand linkul urmator:\n\n' + link + '\n\nMultumim, Echipa Interada Consulting';
+            var waUrl = 'https://wa.me/' + clientPhone + '?text=' + encodeURIComponent(waText);
+            var hasPhone = clientPhone.length > 6;
+
+            div.innerHTML =
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">' +
+                '<span style="font-size:28px;">📋</span>' +
+                '<div><h2 style="margin:0;color:#1F2937;font-size:18px;">Link GDPR generat!</h2>' +
+                '<p style="margin:0;color:#6B7280;font-size:13px;">Client: ' + client.name + '</p></div>' +
+                '</div>' +
+
+                '<p style="font-size:13px;color:#374151;margin:0 0 6px 0;font-weight:600;">🔗 Link GDPR:</p>' +
+                '<div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:10px;border-radius:8px;word-break:break-all;font-size:11px;color:#1D4ED8;margin-bottom:16px;">' + link + '</div>' +
+
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
+                '<button id="btnCopyGdpr" style="padding:13px;background:#2563EB;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;">📋 Copiaza Link</button>' +
+                (hasPhone ? '<button id="btnWaGdpr" style="padding:13px;background:#25D366;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;">💬 Trimite WhatsApp</button>' : '<button id="btnEmailGdpr" style="padding:13px;background:#EA4335;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;">📧 Trimite Gmail</button>') +
+                '</div>' +
+                '<button id="btnMarkSemnatModal" style="width:100%;padding:11px;background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;margin-bottom:8px;">✅ Marcare GDPR Semnat (Manual)</button>' +
+                '<button id="btnCloseGdpr" style="width:100%;padding:10px;background:#6B7280;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;">Inchide</button>';
+
+            modal.appendChild(div);
+            document.body.appendChild(modal);
+
+            var btnEmail = document.getElementById('btnEmailGdpr');
+            if (btnEmail) btnEmail.onclick = function() { window.open(mailtoHref, '_blank'); };
+            var btnWa = document.getElementById('btnWaGdpr');
+            if (btnWa) btnWa.onclick = function() { window.open(waUrl, '_blank'); };
+            document.getElementById('btnCopyGdpr').onclick = function() {
+                navigator.clipboard.writeText(link).then(function() {
+                    document.getElementById('btnCopyGdpr').textContent = '✅ Copiat!';
+                    setTimeout(function() { document.getElementById('btnCopyGdpr').textContent = '📋 Copiaza Link'; }, 2000);
+                });
+            };
+            document.getElementById('btnMarkSemnatModal').onclick = function() {
+                marcheazaGDPRSemnat(client.id);
+            };
+            document.getElementById('btnCloseGdpr').onclick = function() {
+                modal.remove();
+            };
+        }
+
+        function deschideGDPR(client) {
+            var vechi = document.getElementById('gdprOverlay');
+            if (vechi) vechi.remove();
+
+            var ov = document.createElement('div');
+            ov.id = 'gdprOverlay';
+            ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:linear-gradient(135deg,#1e3a8a,#2563EB);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;overflow-y:auto;';
+
+            ov.innerHTML = '<div style="background:white;border-radius:20px;max-width:480px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.4);overflow:hidden;">'
+                // Header
+                + '<div style="background:linear-gradient(135deg,#2563EB,#1D4ED8);padding:28px 28px 22px;text-align:center;">'
+                + '<div style="font-size:48px;margin-bottom:8px;">&#128203;</div>'
+                + '<h2 style="color:white;font-size:21px;font-weight:700;margin:0 0 5px 0;">Acord GDPR</h2>'
+                + '<p style="color:rgba(255,255,255,0.75);font-size:13px;margin:0;">Regulamentul (UE) 2016/679</p>'
+                + '</div>'
+                // Body
+                + '<div style="padding:26px 28px 20px;">'
+                + '<p style="font-size:15px;color:#1f2937;font-weight:600;margin:0 0 12px 0;">Buna ziua, <span style="color:#2563EB;">' + client.name + '</span>!</p>'
+                + '<p style="font-size:14px;color:#374151;line-height:1.75;margin:0 0 16px 0;">'
+                + 'Prin apasarea butonului <strong style="color:#10B981;">SEMNEAZA</strong>, confirmati ca sunteti de acord '
+                + 'cu prelucrarea datelor dumneavoastra personale (nume, email, telefon) de catre compania noastra, '
+                + 'exclusiv in scopul prestarii serviciilor solicitate, conform '
+                + '<strong>Regulamentului (UE) 2016/679 (GDPR)</strong>.'
+                + '</p>'
+                + '<div style="background:#eff6ff;border-left:4px solid #2563EB;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:22px;font-size:13px;color:#374151;line-height:1.8;">'
+                + '&#10003; Datele nu vor fi transmise catre terti<br>'
+                + '&#10003; Puteti retrage acordul oricand<br>'
+                + '&#10003; Aveti dreptul la acces, rectificare si stergere'
+                + '</div>'
+                // Buton SEMNEAZA
+                + '<button id="gdprBtnSemn" onclick="gdprSemneaza(\'' + client.id + '\')" '
+                + 'style="width:100%;padding:16px;background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(16,185,129,0.35);margin-bottom:10px;">'
+                + '&#9989; SEMNEAZA &mdash; Sunt de acord'
+                + '</button>'
+                + '<p id="gdprHintTxt" style="text-align:center;color:#9CA3AF;font-size:12px;margin:0 0 4px 0;">Apasa pentru a accepta acordul GDPR</p>'
+                + '</div>'
+                // Sectiunea TRIMITE (initial ascunsa)
+                + '<div id="gdprSecTrimite" style="display:none;padding:0 28px 26px;">'
+                + '<div style="background:#f0fdf4;border:2px solid #10B981;border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;">'
+                + '<div style="font-size:30px;margin-bottom:4px;">&#9989;</div>'
+                + '<p style="color:#065f46;font-weight:700;font-size:14px;margin:0 0 3px 0;">Acord semnat!</p>'
+                + '<p style="color:#047857;font-size:12px;margin:0;">Apasati TRIMITE pentru a confirma la birou.</p>'
+                + '</div>'
+                + '<button onclick="gdprTrimite(\'' + client.id + '\')" '
+                + 'style="width:100%;padding:16px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(37,99,235,0.35);margin-bottom:10px;">'
+                + '&#128228; TRIMITE &mdash; Confirmare la birou'
+                + '</button>'
+                + '</div>'
+                // Buton inchide
+                + '<div style="padding:0 28px 22px;">'
+                + '<button onclick="document.getElementById(\'gdprOverlay\').remove()" '
+                + 'style="width:100%;padding:11px;background:transparent;color:#9CA3AF;border:2px solid #E5E7EB;border-radius:10px;font-size:13px;cursor:pointer;">'
+                + '&#x2715; Inchide'
+                + '</button>'
+                + '</div>'
+                + '</div>';
+
+            document.body.appendChild(ov);
+        }
+
+        async function gdprSemneaza(clientId) {
+            try {
+                await db.collection('clients').doc(String(clientId)).update({
+                    gdprSigned: true,
+                    gdprSignedDate: new Date().toISOString(),
+                    gdprSent: true
+                });
+                await refreshClients();
+            } catch(e) { console.error(e); }
+
+            // Actualizeaza buton SEMNEAZA
+            var btn = document.getElementById('gdprBtnSemn');
+            if (btn) { btn.textContent = '\u2705 SEMNAT!'; btn.style.background = '#6B7280'; btn.onclick = null; btn.style.cursor = 'default'; }
+            var hint = document.getElementById('gdprHintTxt');
+            if (hint) hint.style.display = 'none';
+
+            // Arata sectiunea TRIMITE
+            var sec = document.getElementById('gdprSecTrimite');
+            if (sec) { sec.style.display = 'block'; }
+
+            // Actualizeaza tabelul in fundal (butonul devine verde)
+            loadClients();
+        }
+
+        async function gdprTrimite(clientId) {
+            var clients = getClients();
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (String(clients[i].id) === String(clientId)) { client = clients[i]; break; }
+            }
+
+            var now = new Date().toLocaleString('ro-RO');
+            var msg = '\ud83d\udccb *ACORD GDPR ACCEPTAT*\n\n'
+                + '\ud83d\udc64 Client: ' + (client ? client.name : '') + '\n'
+                + (client && client.email ? '\ud83d\udce7 Email: ' + client.email + '\n' : '')
+                + (client && client.phone ? '\ud83d\udcde Telefon: ' + client.phone + '\n' : '')
+                + '\ud83d\udcc5 Data: ' + now + '\n\n'
+                + '\u2705 Clientul a acceptat acordul GDPR\n'
+                + '\ud83d\udccc Conform Regulamentului (UE) 2016/679.';
+
+            var settings = await getSettingsAsync();
+            var adminPhone = (settings.adminPhone || '').replace(/\D/g, '');
+
+            if (adminPhone) {
+                window.open('https://wa.me/' + adminPhone + '?text=' + encodeURIComponent(msg), '_blank');
+            } else {
+                navigator.clipboard.writeText(msg).then(function () {
+                    alert('Numar WhatsApp admin negasit in Setari.\nTextul acordului a fost copiat in clipboard!');
+                }).catch(function () {
+                    alert('Numar WhatsApp admin negasit in Setari. Mergi la Setari si adauga numarul tau.');
+                });
+            }
+
+            // Arata mesaj succes si inchide overlay dupa 2s
+            var sec = document.getElementById('gdprSecTrimite');
+            if (sec) {
+                sec.innerHTML = '<div style="background:#eff6ff;border-radius:12px;padding:24px;text-align:center;">'
+                    + '<div style="font-size:48px;margin-bottom:10px;">\ud83c\udf89</div>'
+                    + '<h3 style="color:#1D4ED8;margin:0 0 8px 0;">Trimis cu succes!</h3>'
+                    + '<p style="color:#374151;font-size:14px;margin:0 0 6px 0;">Acordul GDPR a fost confirmat si trimis la birou.</p>'
+                    + '<p style="color:#9CA3AF;font-size:12px;margin:0;">Se inchide automat...</p>'
+                    + '</div>';
+            }
+            setTimeout(function () {
+                var ov = document.getElementById('gdprOverlay');
+                if (ov) ov.remove();
+                loadClients();
+            }, 2000);
+        }
+
+        // ── SINCRONIZARE AUTOMATA GDPR din Webhook ──────────────────────────────
+        async function syncManual() {
+            var btn = document.getElementById('btnSyncGdpr');
+            if (btn) { btn.textContent = '⏳ Se verifica...'; btn.disabled = true; }
+            syncGDPRFromWebhook(function(updated) {
+                if (btn) { btn.textContent = '🔄 Sincronizeaza GDPR'; btn.disabled = false; }
+                if (updated > 0) {
+                    loadClients();
+                    updateStats();
+                    alert('✅ ' + updated + ' client(i) noi au semnat GDPR! Casutele au fost actualizate.');
+                } else {
+                    // Check if webhook is configured
+                    getSettingsAsync().then(function(settings) {
+                        if (!settings.webhookUrl) {
+                            alert('⚠️ Webhook URL nu este configurat!\nMergi la Setari si adauga URL-ul Google Apps Script.');
+                        } else {
+                            alert('ℹ️ Nicio semnatura noua gasita.');
+                        }
+                    });
+                }
+            });
+        }
+
+                async function syncGDPRFromWebhook(callback) {
+            var settings = await getSettingsAsync();
+            var webhookUrl = (settings.webhookUrl || '').trim();
+            if (!webhookUrl) { if(callback) callback(0); return; }
+
+            // JSONP - evita erorile CORS/400
+            var cbName = '_gdprCb_' + Date.now();
+            window[cbName] = function(data) {
+                var el = document.getElementById(cbName);
+                if (el) el.remove();
+                delete window[cbName];
+
+                if (!data || !data.success || !data.tokens || !data.tokens.length) {
+                    if(callback) callback(0);
+                    return;
+                }
+                var clients = getClients().slice(); // copie din cache
+                var updated = 0;
+                data.tokens.forEach(function(t) {
+                    for (var i = 0; i < clients.length; i++) {
+                        if (clients[i].gdprToken === t.token && !clients[i].gdprSigned) {
+                            clients[i].gdprSigned = true;
+                            clients[i].gdprSignedDate = t.date || new Date().toISOString();
+                            clients[i].gdprSent = true;
+                            updated++;
+                        }
+                    }
+                });
+                if (updated > 0) {
+                    // Save all updated clients to Firebase
+                    var savePromises = [];
+                    clients.forEach(function(c) { savePromises.push(saveClientAsync(c)); });
+                    Promise.all(savePromises).then(function() { refreshClients(); });
+                }
+                if(callback) callback(updated);
+            };
+
+            var script = document.createElement('script');
+            script.id = cbName;
+            script.src = webhookUrl + '?action=get&callback=' + cbName + '&_=' + Date.now();
+            script.onerror = function() {
+                delete window[cbName];
+                if(callback) callback(0);
+            };
+            document.head.appendChild(script);
+        }
+
+                function loadGDPRList() {
+            var clients = getClients();
+            var signed = clients.filter(function(c) { return c.gdprSigned; });
+            signed.sort(function(a, b) {
+                return new Date(b.gdprSignedDate || 0) - new Date(a.gdprSignedDate || 0);
+            });
+
+            var tbody = document.getElementById('gdprSignedTable');
+            var emptyMsg = document.getElementById('gdprEmptyMsg');
+            var countEl = document.getElementById('gdprSignedCount');
+
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (countEl) countEl.textContent = signed.length + ' clienti';
+
+            if (signed.length === 0) {
+                if (emptyMsg) emptyMsg.style.display = 'block';
+                return;
+            }
+            if (emptyMsg) emptyMsg.style.display = 'none';
+
+            signed.forEach(function(client) {
+                var tr = document.createElement('tr');
+                var signedDate = client.gdprSignedDate
+                    ? new Date(client.gdprSignedDate).toLocaleString('ro-RO') : '-';
+                var statusColor = { new: '#DBEAFE', working: '#FEF3C7', done: '#D1FAE5' };
+                var statusText = { new: '#1D4ED8', working: '#B45309', done: '#065f46' };
+                var statusLabel = { new: 'Nou', working: 'In Lucru', done: 'Finalizat' };
+                tr.innerHTML =
+                    '<td><strong>' + client.name + '</strong>' + 
+                    (client.credit && client.credit.tip ? '<br><span style="font-size:11px;background:#EFF6FF;color:#1D4ED8;padding:2px 6px;border-radius:4px;">' + client.credit.tip + (client.credit.suma ? ' • ' + parseInt(client.credit.suma).toLocaleString() + ' RON' : '') + '</span>' : '') +
+                    (client.credit && client.credit.status ? '<br><span style="font-size:11px;background:' + ({'Aprobat':'#D1FAE5','Respins':'#FEE2E2','Acordat':'#D1FAE5','In analiza':'#FEF3C7','Trimis banca':'#DBEAFE','Nou':'#F3F4F6'}[client.credit.status]||'#F3F4F6') + ';color:#374151;padding:2px 6px;border-radius:4px;">' + client.credit.status + '</span>' : '') +
+                    '</td>' +
+                    '<td>' + (client.email || '-') + '</td>' +
+                    '<td>' + (client.phone || '-') + '</td>' +
+                    '<td>' + (client.agent || '-') + '</td>' +
+                    '<td style="color:#059669;font-weight:600;">✅ ' + signedDate + '</td>' +
+                    '<td><span style="background:' + (statusColor[client.status]||'#F3F4F6') + ';color:' + (statusText[client.status]||'#374151') + ';padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;">' + (statusLabel[client.status]||client.status) + '</span></td>';
+                tbody.appendChild(tr);
+            });
+        }
+
+                async function marcheazaGDPRSemnat(clientId) {
+            var clients = getClients();
+            var clientName = '';
+            for (var i = 0; i < clients.length; i++) {
+                if (String(clients[i].id) === String(clientId)) {
+                    clientName = clients[i].name;
+                    break;
+                }
+            }
+            try {
+                await db.collection('clients').doc(String(clientId)).update({
+                    gdprSigned: true,
+                    gdprSignedDate: new Date().toISOString(),
+                    gdprSent: true
+                });
+                await refreshClients();
+            } catch(e) { console.error(e); }
+            var modal = document.getElementById('gdprLinkModal');
+            if (modal) modal.remove();
+            loadClients();
+            // Banner succes
+            var banner = document.createElement('div');
+            banner.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#10B981,#059669);color:white;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;z-index:9999;box-shadow:0 8px 25px rgba(16,185,129,0.4);text-align:center;white-space:nowrap;';
+            banner.textContent = '✅ GDPR marcat ca semnat pentru ' + (clientName || 'client') + '!';
+            document.body.appendChild(banner);
+            setTimeout(function(){ banner.style.opacity='0'; banner.style.transition='opacity 0.5s'; setTimeout(function(){banner.remove();},500); }, 3500);
+        }
+
+                function checkGDPRConfirm() {
+            var params = new URLSearchParams(window.location.search);
+            var confirmToken = params.get('gdprConfirm');
+            if (!confirmToken) return false;
+
+            var clients = getClients();
+            var found = false;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].gdprToken === confirmToken) {
+                    clients[i].gdprSigned = true;
+                    clients[i].gdprSignedDate = clients[i].gdprSignedDate || new Date().toISOString();
+                    clients[i].gdprSent = true;
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                // Salveaza in Firebase async
+                var tokenToSave = confirmToken;
+                var clientToUpdate = null;
+                for (var j = 0; j < clients.length; j++) {
+                    if (clients[j].gdprToken === tokenToSave) { clientToUpdate = clients[j]; break; }
+                }
+                if (clientToUpdate) {
+                    db.collection('clients').doc(String(clientToUpdate.id)).update({
+                        gdprSigned: true,
+                        gdprSignedDate: clientToUpdate.gdprSignedDate || new Date().toISOString(),
+                        gdprSent: true
+                    }).catch(function(e){ console.error(e); });
+                }
+                window.history.replaceState({}, document.title, window.location.pathname);
+                window._gdprConfirmSuccess = true;
+            }
+            return false;
+        }
+
+        function checkGDPR() {
+            var params = new URLSearchParams(window.location.search);
+            var token = params.get('gdpr');
+
+            if (!token) {
+                // Incearca si parametrul vechi 'tok'
+                token = params.get('tok');
+            }
+
+            if (!token) return false;
+
+            var clientName = params.get('cn') || 'Client';
+            var adminPhone = params.get('ap') || '';
+
+            // Afiseaza pagina GDPR
+            showGDPRPage(clientName, token, adminPhone);
+            return true;
+        }
+
+        function showGDPRPage(clientName, token, adminPhone) {
+            // Ascunde toate elementele paginii principale
+            var loginDiv = document.getElementById('loginSection');
+            var dashboardDiv = document.getElementById('dashboardSection');
+            if (loginDiv) loginDiv.style.display = 'none';
+            if (dashboardDiv) dashboardDiv.style.display = 'none';
+
+            // Creeaza pagina GDPR
+            var gdprPage = document.createElement('div');
+            gdprPage.id = 'gdprStandalonePage';
+            gdprPage.style.cssText = 'min-height:100vh;background:linear-gradient(135deg,#1e3a8a,#2563EB);padding:20px;display:flex;align-items:center;justify-content:center;';
+
+            gdprPage.innerHTML = '<div style="background:white;border-radius:20px;max-width:480px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.4);overflow:hidden;">' +
+                '<div style="background:linear-gradient(135deg,#2563EB,#1D4ED8);padding:28px;text-align:center;">' +
+                '<div style="font-size:48px;margin-bottom:8px;">📋</div>' +
+                '<h2 style="color:white;font-size:21px;margin:0 0 5px 0;">Acord GDPR</h2>' +
+                '<p style="color:rgba(255,255,255,0.75);font-size:13px;margin:0;">Regulamentul (UE) 2016/679</p>' +
+                '</div>' +
+                '<div style="padding:26px;" id="gdprFormSection">' +
+                '<p style="font-size:15px;font-weight:600;margin:0 0 12px 0;">Buna ziua, <span style="color:#2563EB;">' + decodeURIComponent(clientName) + '</span>!</p>' +
+                '<p style="font-size:14px;color:#374151;line-height:1.75;margin:0 0 16px 0;">Prin apasarea butonului <strong style="color:#10B981;">SEMNEAZA</strong>, confirmati ca sunteti de acord cu prelucrarea datelor dumneavoastra personale conform GDPR.</p>' +
+                '<div style="background:#eff6ff;border-left:4px solid #2563EB;border-radius:0 8px 8px 0;padding:12px;margin-bottom:22px;font-size:13px;color:#374151;">' +
+                '✔ Datele nu vor fi transmise catre terti<br>' +
+                '✔ Puteti retrage acordul oricand<br>' +
+                '✔ Aveti dreptul la acces, rectificare si stergere' +
+                '</div>' +
+                '<button id="gdprSignBtn" onclick="gdprStandaloneSign()" style="width:100%;padding:16px;background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;margin-bottom:10px;">✅ SEMNEAZA — Sunt de acord</button>' +
+                '<p id="gdprHint" style="text-align:center;color:#9CA3AF;font-size:12px;margin:0 0 4px 0;">Apasa pentru a accepta acordul GDPR</p>' +
+                '</div>' +
+                '<div id="gdprSendSection" style="display:none;padding:0 26px 26px;">' +
+                '<div style="background:#f0fdf4;border:2px solid #10B981;border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;">' +
+                '<div style="font-size:30px;">✅</div>' +
+                '<p style="color:#065f46;font-weight:700;font-size:14px;margin:4px 0;">Acord semnat!</p>' +
+                '<p style="color:#047857;font-size:12px;margin:0;">Apasati TRIMITE pentru a confirma la birou.</p>' +
+                '</div>' +
+                '<button id="gdprSendBtn" onclick="gdprStandaloneSend()" style="width:100%;padding:16px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;">📤 TRIMITE — Confirmare la birou</button>' +
+                '</div>' +
+                '<div id="gdprSuccessSection" style="display:none;padding:26px;text-align:center;">' +
+                '<div style="font-size:56px;">🎉</div>' +
+                '<h3 style="color:#1D4ED8;font-size:20px;margin:12px 0 8px 0;">Trimis cu succes!</h3>' +
+                '<p style="color:#374151;font-size:14px;margin:0 0 5px 0;">Acordul GDPR a fost confirmat si trimis la birou.</p>' +
+                '<small style="color:#9CA3AF;font-size:12px;">Puteti inchide aceasta pagina.</small>' +
+                '</div>' +
+                '</div>';
+
+            // Seteaza variabilele globale pentru functii
+            window.gdprToken = token;
+            window.gdprAdminPhone = adminPhone;
+            window.gdprClientName = clientName;
+
+            document.body.appendChild(gdprPage);
+        }
+
+        function gdprStandaloneSign() {
+            var btn = document.getElementById('gdprSignBtn');
+            var hint = document.getElementById('gdprHint');
+            var formSec = document.getElementById('gdprFormSection');
+            var sendSec = document.getElementById('gdprSendSection');
+
+            btn.textContent = '✅ SEMNAT!';
+            btn.disabled = true;
+            btn.style.background = '#6B7280';
+            if (hint) hint.style.display = 'none';
+
+            sendSec.style.display = 'block';
+            setTimeout(function () { sendSec.scrollIntoView({ behavior: 'smooth' }); }, 100);
+        }
+
+        function gdprStandaloneSend() {
+            var adminWA = window.gdprAdminPhone;
+            if (!adminWA) {
+                alert('Numar admin negasit. Contactati compania.');
+                return;
+            }
+
+            var now = new Date().toLocaleString('ro-RO');
+            var msg = '📋 *ACORD GDPR ACCEPTAT*\n\n' +
+                '👤 Client: ' + decodeURIComponent(window.gdprClientName) + '\n' +
+                '🔑 Token: ' + window.gdprToken + '\n' +
+                '📅 Data: ' + now + '\n\n' +
+                '✅ Clientul a acceptat acordul GDPR.';
+
+            window.open('https://wa.me/' + adminWA + '?text=' + encodeURIComponent(msg), '_blank');
+
+            var sendSec = document.getElementById('gdprSendSection');
+            var successSec = document.getElementById('gdprSuccessSection');
+
+            sendSec.style.display = 'none';
+            successSec.style.display = 'block';
+        }
+
+        // === SETARI ===
+        async function loadSettings() {
+            const settings = await getSettingsAsync();
+            document.getElementById('settingCompany').value = settings.company || 'CRM Agent';
+            document.getElementById('settingWelcome').value = settings.welcome || 'Completezi datele clientilor';
+            var ph = document.getElementById('settingAdminPhone');
+            if (ph) ph.value = settings.adminPhone || '';
+            var wh = document.getElementById('settingWebhookUrl');
+            if (wh) wh.value = settings.webhookUrl || '';
+            var ae = document.getElementById('settingAdminEmail');
+            if (ae) ae.value = settings.adminEmail || 'bagaiteanugeorge.gb@gmail.com';
+        }
+
+        async function saveWebhookUrl() {
+            var s = await getSettingsAsync();
+            s.webhookUrl = document.getElementById('settingWebhookUrl').value.trim();
+            await saveSettingsAsync(s);
+            alert('Webhook URL salvat!');
+        }
+
+        async function saveAdminPhone() {
+            var s = await getSettingsAsync();
+            s.adminPhone = document.getElementById('settingAdminPhone').value.trim();
+            await saveSettingsAsync(s);
+            alert('Telefon salvat!');
+        }
+
+        async function saveAdminEmail() {
+            var s = await getSettingsAsync();
+            s.adminEmail = document.getElementById('settingAdminEmail').value.trim();
+            await saveSettingsAsync(s);
+            alert('Email admin salvat!');
+        }
+
+        async function saveSettings() {
+            const existing = await getSettingsAsync();
+            const settings = { ...existing,
+                company: document.getElementById('settingCompany').value,
+                welcome: document.getElementById('settingWelcome').value
+            };
+            await saveSettingsAsync(settings);
+
+            document.getElementById('successMessage').textContent = 'Setarile au fost salvate!';
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        async function saveCompanyName() {
+            const settings = await getSettingsAsync();
+            settings.company = document.getElementById('settingCompany').value;
+            await saveSettingsAsync(settings);
+
+            document.getElementById('successMessage').textContent = 'Denumirea companiei a fost salvata!';
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        async function saveWelcomeMsg() {
+            const settings = await getSettingsAsync();
+            settings.welcome = document.getElementById('settingWelcome').value;
+            await saveSettingsAsync(settings);
+
+            document.getElementById('successMessage').textContent = 'Mesajul de bun venit a fost salvat!';
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        // Export data to download as folder with date
+        async function exportData() {
+            const clients = getClients();
+            const settings = await getSettingsAsync();
+
+            const now = new Date();
+            const folderName = 'CRM_Backup_' + now.toISOString().slice(0, 10) + '_' + now.toTimeString().slice(0, 8).replace(/:/g, '-');
+
+            // Create text report
+            let report = '=== CRM EXPORT DATA ===' + '\n';
+            report += 'Data Export: ' + now.toLocaleString() + '\n';
+            report += 'Total Clients: ' + clients.length + '\n\n';
+            report += '=== CLIENTS LIST ===' + '\n\n';
+
+            clients.forEach((client, index) => {
+                report += 'Client ' + (index + 1) + ': ' + client.name + '\n';
+                report += '  Email: ' + client.email + '\n';
+                report += '  Phone: ' + client.phone + '\n';
+                report += '  Agent: ' + client.agent + '\n';
+                report += '  Status: ' + client.status + '\n';
+                report += '  Date: ' + new Date(client.date).toLocaleString() + '\n';
+                report += '\n';
+            });
+
+            // JSON data
+            const jsonData = JSON.stringify({ exportDate: now.toISOString(), settings: settings, clients: clients }, null, 2);
+
+            // CSV data
+            let csv = 'ID,Name,Email,Phone,Agent,Status,Date\n';
+            clients.forEach(c => {
+                csv += c.id + ',' + c.name + ',' + c.email + ',' + c.phone + ',' + c.agent + ',' + c.status + ',' + new Date(c.date).toISOString() + '\n';
+            });
+
+            // Download as text file
+            const blob = new Blob([
+                'CRM BACKUP - ' + folderName + '\n\n' +
+                report + '\n=== JSON DATA ===\n' + jsonData + '\n\n=== CSV DATA ===\n' + csv
+            ], { type: 'text/plain' });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = folderName + '.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            document.getElementById('successMessage').textContent = 'Datele au fost descarcate: ' + folderName + '.txt';
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        // Export credentials (admin only)
+        function exportCredentials() {
+            const credentials = 'CRM CREDENTIALS EXPORT\n========================\nGenerated: ' + new Date().toLocaleString() + '\n\nAGENT CREDENTIALS:\n---\nAgent 1: agent1 / INTERADA3\nAgent 2: agent2 / INTERADA7\nAgent 3: agent3 / INTERADA1\nAgent 4: agent4 / INTERADA9\nAgent 5: agent5 / INTERADA5\n\nADMIN CREDENTIALS:\n---\nAdmin: admin / admin123\n\nIMPORTANT: Keep this file secure!';
+
+            const blob = new Blob([credentials], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'CRM_Credentials.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            document.getElementById('successMessage').textContent = 'Credentiale descarcate: CRM_Credentials.txt';
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        async function resetData() {
+            if (confirm('Esti sigur? Se vor sterge toti clientii!')) {
+                const snap = await db.collection('clients').get();
+                const deletePromises = snap.docs.map(d => d.ref.delete());
+                await Promise.all(deletePromises);
+                await refreshClients();
+                loadClients();
+                updateStats();
+                alert('Datele au fost resetate!');
+            }
+        }
+
+        // === MODAL ===
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // === LOGOUT ===
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').textContent = '';
+        }
+
+        // Init
+        (async function() { await init(); })();
+    </script>
+</body>
+
+</html>

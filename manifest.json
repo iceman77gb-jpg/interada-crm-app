@@ -1,0 +1,22 @@
+{
+  "name": "Interada CRM",
+  "short_name": "Interada",
+  "description": "CRM Agent & Birou - Interada Consulting",
+  "start_url": "/interada-crm/",
+  "display": "standalone",
+  "background_color": "#F0FDF4",
+  "theme_color": "#1D4ED8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/1D4ED8/FFFFFF?text=IC",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/1D4ED8/FFFFFF?text=IC",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
