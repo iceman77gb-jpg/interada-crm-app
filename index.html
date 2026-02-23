@@ -1141,7 +1141,12 @@
                         gdprHtml = `<button class="btn-small" onclick="sendGDPR(${client.id})">📨 GDPR</button>`;
                     }
                 } else {
-                    gdprHtml = `<span style="color:#9CA3AF;font-size:12px;">⏳ Necompletat</span>`;
+                    // Agent vede buton GDPR
+                    if (client.gdprSent) {
+                        gdprHtml = `<button class="btn-small" onclick="sendGDPR(${client.id})" style="background:#F59E0B;color:white;border:none;padding:4px 10px;border-radius:8px;cursor:pointer;font-size:12px;">📨 Asteapta</button>`;
+                    } else {
+                        gdprHtml = `<button class="btn-small" onclick="sendGDPR(${client.id})" style="background:#3B82F6;color:white;border:none;padding:4px 10px;border-radius:8px;cursor:pointer;font-size:12px;">📨 GDPR</button>`;
+                    }
                 }
 
                 // Status - only admin can change, agents see it as badge
