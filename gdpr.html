@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acord GDPR - Interada Consulting</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #F0FDF4; padding: 20px; }
+.container { max-width: 680px; margin: 0 auto; }
+.header { background: linear-gradient(135deg, #1D4ED8, #2563EB); padding: 28px; border-radius: 16px 16px 0 0; text-align: center; }
+.header h1 { color: white; font-size: 22px; }
+.header p { color: rgba(255,255,255,0.8); font-size: 13px; margin-top: 4px; }
+.card { background: white; padding: 28px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.client-info { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 14px; color: #1D4ED8; }
+.question { border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.question p { font-size: 14px; color: #1F2937; margin-bottom: 12px; font-weight: 500; }
+.radio-group { display: flex; gap: 12px; }
+.opt { cursor: pointer; padding: 8px 20px; border-radius: 8px; border: 2px solid #E5E7EB; font-size: 14px; font-weight: 600; }
+.opt.da { border-color: #10B981; background: #F0FDF4; color: #065f46; }
+.opt.nu { border-color: #EF4444; background: #FEF2F2; color: #991B1B; }
+.sign-label { font-size: 15px; font-weight: 600; color: #1F2937; margin: 24px 0 10px; }
+#signCanvas { display: block; border: 2px solid #10B981; border-radius: 10px; background: #FAFFFE; cursor: crosshair; touch-action: none; width: 100%; height: 160px; }
+.btn-clear { margin-top: 8px; background: none; border: 1px solid #D1D5DB; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; color: #6B7280; }
+.btn-submit { display: block; width: 100%; margin-top: 24px; padding: 16px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; }
+#successCard { display: none; text-align: center; padding: 40px 20px; }
+#alreadyCard { display: none; text-align: center; padding: 40px 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🏢 INTERADA CONSULTING</h1>
+    <p>Acord privind prelucrarea datelor personale — Regulamentul UE 679/2016</p>
+  </div>
+  <div class="card">
+
+    <div id="alreadyCard">
+      <div style="font-size:48px">✅</div>
+      <h2 style="color:#1D4ED8;margin:16px 0 8px">Acord deja semnat</h2>
+      <p style="color:#6B7280">Acest link a fost deja folosit. Va multumim!</p>
+    </div>
+
+    <div id="successCard">
+      <div style="font-size:48px">🎉</div>
+      <h2 style="color:#059669;margin:16px 0 8px">Multumim!</h2>
+      <p style="color:#374151">Acordul GDPR a fost semnat si trimis cu succes.</p>
+    </div>
+
+    <div id="formCard">
+      <div class="client-info">👤 Client: <strong id="clientName">—</strong></div>
+
+      <div class="question">
+        <p>1. Sunteti de acord cu prelucrarea datelor personale de catre Interada Consulting?</p>
+        <div class="radio-group">
+          <div class="opt" id="q1_da" onclick="pick('q1','DA')">✔ DA</div>
+          <div class="opt" id="q1_nu" onclick="pick('q1','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>2. Sunteti de acord cu utilizarea datelor in scopuri de marketing?</p>
+        <div class="radio-group">
+          <div class="opt" id="q2_da" onclick="pick('q2','DA')">✔ DA</div>
+          <div class="opt" id="q2_nu" onclick="pick('q2','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>3. Sunteti de acord sa fiti contactat de INTERADA CONSULTING max. o data/luna cu oportunitati din piata bancara?</p>
+        <div class="radio-group">
+          <div class="opt" id="q3_da" onclick="pick('q3','DA')">✔ DA</div>
+          <div class="opt" id="q3_nu" onclick="pick('q3','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>4. Sunteti de acord sa fiti informat doar la sediul Interada Consulting?</p>
+        <div class="radio-group">
+          <div class="opt" id="q4_da" onclick="pick('q4','DA')">✔ DA</div>
+          <div class="opt" id="q4_nu" onclick="pick('q4','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>5. Sunteti de acord cu comunicarea doar prin intermediul Interada Consulting?</p>
+        <div class="radio-group">
+          <div class="opt" id="q5_da" onclick="pick('q5','DA')">✔ DA</div>
+          <div class="opt" id="q5_nu" onclick="pick('q5','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>6. Sunteti de acord cu comunicarea pe cale electronica (email/telefon)?</p>
+        <div class="radio-group">
+          <div class="opt" id="q6_da" onclick="pick('q6','DA')">✔ DA</div>
+          <div class="opt" id="q6_nu" onclick="pick('q6','NU')">✘ NU</div>
+        </div>
+      </div>
+      <div class="question">
+        <p>7. Sunteti de acord cu comunicarea prin posta sau curier?</p>
+        <div class="radio-group">
+          <div class="opt" id="q7_da" onclick="pick('q7','DA')">✔ DA</div>
+          <div class="opt" id="q7_nu" onclick="pick('q7','NU')">✘ NU</div>
+        </div>
+      </div>
+
+      <p class="sign-label">✍️ Semnatura dumneavoastra:</p>
+      <canvas id="signCanvas"></canvas>
+      <button class="btn-clear" onclick="clearSig()">🗑 Sterge</button>
+
+      <button class="btn-submit" id="btnSubmit" onclick="trimite()">✅ Semnează și Trimite</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+    apiKey: "AIzaSyBrIktFOPbTVzG6ocdpP9jTLP8YaU4TXvU",
+    authDomain: "crm-interada.firebaseapp.com",
+    projectId: "crm-interada",
+    storageBucket: "crm-interada.firebasestorage.app",
+    messagingSenderId: "317559859834",
+    appId: "1:317559859834:web:bffc67001f44e9bf97a9c3"
+});
+var db = firebase.firestore();
+
+// Parametri URL
+var p = new URLSearchParams(location.search);
+var clientName = decodeURIComponent(p.get('cn') || 'Client');
+var token     = p.get('gdpr') || p.get('tok') || '';
+var adminEmail = decodeURIComponent(p.get('ae') || 'bagaiteanugeorge.gb@gmail.com');
+var clientEmail = decodeURIComponent(p.get('ce') || '');
+var clientPhone = decodeURIComponent(p.get('cp') || '');
+document.getElementById('clientName').textContent = clientName;
+
+// Verifica daca deja semnat
+if (token) {
+    db.collection('clients').where('gdprToken','==',token).get().then(function(s){
+        if (!s.empty && s.docs[0].data().gdprSigned) {
+            document.getElementById('formCard').style.display = 'none';
+            document.getElementById('alreadyCard').style.display = 'block';
+        }
+    });
+}
+
+// Radio buttons
+var ans = {};
+function pick(q, v) {
+    ans[q] = v;
+    document.getElementById(q+'_da').className = 'opt' + (v==='DA' ? ' da' : '');
+    document.getElementById(q+'_nu').className = 'opt' + (v==='NU' ? ' nu' : '');
+}
+
+// Canvas
+var cv = document.getElementById('signCanvas');
+var cx = cv.getContext('2d');
+var drawing = false;
+var signed = false;
+
+cv.width  = cv.offsetWidth  || 600;
+cv.height = 160;
+cx.strokeStyle = '#1D4ED8';
+cx.lineWidth   = 2.5;
+cx.lineCap     = 'round';
+cx.lineJoin    = 'round';
+
+function pos(e) {
+    var r = cv.getBoundingClientRect();
+    var src = e.touches ? e.touches[0] : e;
+    return {
+        x: (src.clientX - r.left) * cv.width  / r.width,
+        y: (src.clientY - r.top)  * cv.height / r.height
+    };
+}
+
+cv.onmousedown  = function(e){ drawing=true; signed=true; var p=pos(e); cx.beginPath(); cx.moveTo(p.x,p.y); };
+cv.onmousemove  = function(e){ if(!drawing) return; var p=pos(e); cx.lineTo(p.x,p.y); cx.stroke(); cx.beginPath(); cx.moveTo(p.x,p.y); };
+cv.onmouseup    = function(){ drawing=false; };
+cv.onmouseleave = function(){ drawing=false; };
+cv.addEventListener('touchstart', function(e){ e.preventDefault(); drawing=true; signed=true; var p=pos(e); cx.beginPath(); cx.moveTo(p.x,p.y); }, {passive:false});
+cv.addEventListener('touchmove',  function(e){ e.preventDefault(); if(!drawing) return; var p=pos(e); cx.lineTo(p.x,p.y); cx.stroke(); cx.beginPath(); cx.moveTo(p.x,p.y); }, {passive:false});
+cv.addEventListener('touchend',   function(){ drawing=false; });
+
+function clearSig() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    signed = false;
+}
+
+// Submit
+function trimite() {
+    if (!signed) { alert('Va rugam sa semnati!'); return; }
+
+    var now       = new Date().toLocaleString('ro-RO');
+    var signedDate = new Date().toISOString();
+    var img       = cv.toDataURL('image/png');
+    var raspunsuri = {};
+    for (var i=1;i<=7;i++) raspunsuri['Punctul '+i] = ans['q'+i] || '-';
+
+    var lab = [
+        'Prelucrarea datelor personale de catre Interada Consulting',
+        'Utilizarea datelor in scopuri de marketing',
+        'Contactat de Interada Consulting max. o data/luna cu oportunitati din piata bancara',
+        'Informare doar la sediul Interada Consulting',
+        'Comunicare doar prin intermediul Interada Consulting',
+        'Comunicare pe cale electronica (email/telefon)',
+        'Comunicare prin posta sau curier'
+    ];
+    var body = '✅ ACORD GDPR SEMNAT - INTERADA CONSULTING\n════════════════════════════════\n\n';
+    body += '👤 Client: ' + clientName + '\n';
+    body += '📅 Data semnarii: ' + now + '\n\n';
+    body += '── RASPUNSURI ──\n\n';
+    for (var i=1;i<=7;i++) {
+        var val = ans['q'+i] || '';
+        var icon = val==='DA' ? '[DA]  ✔' : (val==='NU' ? '[NU]  ✘' : '[   ]  —');
+        body += icon + '  ' + lab[i-1] + '\n';
+    }
+    body += '════════════════════════════════\n';
+    body += 'Semnat electronic prin platforma Interada Consulting';
+
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+        // Pe iPhone deschide Gmail app direct (googlegmail://)
+        var gmailApp = 'googlegmail://co?to=' + encodeURIComponent(adminEmail)
+            + '&subject=' + encodeURIComponent('✅ GDPR SEMNAT - ' + clientName)
+            + '&body=' + encodeURIComponent(body);
+        // Incearca Gmail app, daca nu e instalata fallback la mailto
+        var fallback = setTimeout(function() {
+            window.location.href = 'mailto:' + encodeURIComponent(adminEmail)
+                + '?subject=' + encodeURIComponent('✅ GDPR SEMNAT - ' + clientName)
+                + '&body=' + encodeURIComponent(body);
+        }, 1000);
+        window.location.href = gmailApp;
+        window.addEventListener('blur', function() { clearTimeout(fallback); });
+    } else {
+        // Pe Android/Desktop mailto functioneaza perfect
+        window.location.href = 'mailto:' + encodeURIComponent(adminEmail)
+            + '?subject=' + encodeURIComponent('✅ GDPR SEMNAT - ' + clientName)
+            + '&body=' + encodeURIComponent(body);
+    }
+
+    // Salveaza Firebase
+    if (token) {
+        db.collection('clients').where('gdprToken','==',token).get().then(function(s){
+            if (!s.empty) {
+                var d = s.docs[0];
+                var files = d.data().files || [];
+                files.push({ name:'GDPR_'+clientName+'.gdpr', type:'gdpr_acord', isPDF:false, raspunsuri:raspunsuri, semnatura:img, date:signedDate, size:'Acord GDPR' });
+                d.ref.update({ gdprSigned:true, gdprSignedDate:signedDate, gdprSent:true, gdprRaspunsuri:raspunsuri, gdprSemnatura:img, files:files });
+            }
+        });
+    }
+
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+}
+</script>
+</body>
+</html>

@@ -1288,7 +1288,7 @@
             return labels[status] || status;
         }
 
-        async function addClient(e) {
+        function addClient(e) {
             e.preventDefault();
 
             const client = {
@@ -1323,25 +1323,25 @@
             };
 
             // Salveaza in Firebase
-            await saveClientAsync(client);
-            await refreshClients();
+            saveClientAsync(client).then(function() {
+                refreshClients();
+                e.target.reset();
+                selectedFiles = [];
+                document.getElementById('fileList').innerHTML = '';
 
-            // Reset form
-            e.target.reset();
-            selectedFiles = []; // Reset files
-            document.getElementById('fileList').innerHTML = ''; // Clear file list
-
-            // Show success - check if dashboard elements exist
-            const successMsg = document.getElementById('successMessage');
-            const successModal = document.getElementById('successModal');
-
-            if (successMsg && successModal) {
-                successMsg.textContent = 'Clientul a fost adaugat cu succes!';
-                successModal.classList.add('active');
-            } else {
-                alert('Clientul a fost adaugat cu succes!');
-            }
-        }
+                // Show success
+                var successMsg = document.getElementById('successMessage');
+                var successModal = document.getElementById('successModal');
+                if (successMsg && successModal) {
+                    successMsg.textContent = 'Clientul a fost adaugat cu succes!';
+                    successModal.classList.add('active');
+                } else {
+                    alert('Clientul a fost adaugat cu succes!');
+                }
+                showPage('clients');
+            }).catch(function(err) {
+                alert('Eroare la salvare: ' + err.message);
+            });
 
         // === FILE HANDLING ===
         let selectedFiles = [];
