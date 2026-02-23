@@ -947,7 +947,7 @@
             const password = document.getElementById('password').value;
 
             if (users[username] && users[username].password === password) {
-                currentUser = { username, ...users[username] };
+                currentUser = { username: username, password: users[username].password, role: users[username].role, name: users[username].name };
                 failedAttempts = 0;
 
                 const loggedInBefore = localStorage.getItem('crm_logged_' + username);
