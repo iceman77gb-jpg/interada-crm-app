@@ -1323,24 +1323,21 @@
             };
 
             // Salveaza in Firebase
-            saveClientAsync(client).then(function() {
-                refreshClients();
+            console.log('Salvez client:', client.name);
+            db.collection('clients').doc(String(client.id)).set(client).then(function() {
+                console.log('Salvat OK in Firebase!');
+                window._clientsCache = null;
+                refreshClients().then(function() {
+                    loadClients();
+                });
                 e.target.reset();
                 selectedFiles = [];
                 document.getElementById('fileList').innerHTML = '';
-
-                // Show success
-                var successMsg = document.getElementById('successMessage');
-                var successModal = document.getElementById('successModal');
-                if (successMsg && successModal) {
-                    successMsg.textContent = 'Clientul a fost adaugat cu succes!';
-                    successModal.classList.add('active');
-                } else {
-                    alert('Clientul a fost adaugat cu succes!');
-                }
+                alert('✅ Clientul ' + client.name + ' a fost salvat!');
                 showPage('clients');
             }).catch(function(err) {
-                alert('Eroare la salvare: ' + err.message);
+                console.error('Eroare Firebase:', err);
+                alert('❌ Eroare la salvare: ' + err.message);
             });
         }
 
