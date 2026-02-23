@@ -1,8 +1,8 @@
 const CACHE_NAME = 'interada-crm-v1';
 const urlsToCache = [
-  '/interada-crm/',
-  '/interada-crm/index.html',
-  '/interada-crm/gdpr.html'
+  '/interada-crm-app/',
+  '/interada-crm-app/index.html',
+  '/interada-crm-app/gdpr.html'
 ];
 
 self.addEventListener('install', function(event) {
@@ -18,7 +18,7 @@ self.addEventListener('fetch', function(event) {
     caches.match(event.request).then(function(response) {
       if (response) return response;
       return fetch(event.request).catch(function() {
-        return caches.match('/interada-crm/index.html');
+        return caches.match('/interada-crm-app/index.html');
       });
     })
   );

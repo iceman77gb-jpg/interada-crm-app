@@ -2,7 +2,7 @@
   "name": "Interada CRM",
   "short_name": "Interada",
   "description": "CRM Agent & Birou - Interada Consulting",
-  "start_url": "/interada-crm/",
+  "start_url": "/interada-crm-app/",
   "display": "standalone",
   "background_color": "#F0FDF4",
   "theme_color": "#1D4ED8",
